@@ -7,7 +7,7 @@ using Ph_App.Models;
 
 namespace Ph_App.Forms
 {
-    public partial class ProfitReportForm : Form
+    public partial class ProfitReportForm : ResponsiveForm
     {
         public ProfitReportForm()
         {

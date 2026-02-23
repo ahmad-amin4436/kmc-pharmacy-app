@@ -147,6 +147,7 @@ namespace Ph_App.DAL
             {
                 LogID = Convert.ToInt32(reader["LogID"]),
                 UserID = reader["UserID"] != DBNull.Value ? Convert.ToInt32(reader["UserID"]) : (int?)null,
+                    Username = reader["Username"]?.ToString(),
                 ActionType = reader["ActionType"].ToString(),
                 TableAffected = reader["TableAffected"].ToString(),
                 RecordID = reader["RecordID"]?.ToString(),
@@ -262,7 +263,7 @@ namespace Ph_App.DAL
         }
 
         // Specialized audit logging methods using pure ADO.NET
-        public void LogUserLogin(int userId, string username, string ipAddress = null, string userAgent = null)
+    public void LogUserLogin(int userId, string username, string ipAddress = null, string userAgent = null)
         {
             var query = @"
                 INSERT INTO AuditLogs (
@@ -290,7 +291,7 @@ namespace Ph_App.DAL
             ExecuteNonQuery(query, parameters);
         }
 
-        public void LogUserLogout(int userId, string username, string ipAddress = null, string userAgent = null)
+    public void LogUserLogout(int userId, string username, string ipAddress = null, string userAgent = null)
         {
             var query = @"
                 INSERT INTO AuditLogs (
@@ -320,6 +321,20 @@ namespace Ph_App.DAL
 
         public void LogUserAction(int? userId, string actionType, string tableAffected, string recordId, string oldValue, string newValue, string ipAddress = null, string userAgent = null)
         {
+            // if caller passed null, try to use currently authenticated user from context
+            if (!userId.HasValue)
+            {
+                try
+                {
+                    var current = Ph_App.Database.PharmacyDBContext.CurrentUser;
+                    if (current != null)
+                        userId = current.UserID;
+                }
+                catch
+                {
+                    // ignore any errors here and leave userId as null
+                }
+            }
             var query = @"
                 INSERT INTO AuditLogs (
                     UserID, ActionType, TableAffected, RecordID, 

@@ -7,7 +7,7 @@ using Ph_App.Models;
 
 namespace Ph_App.Forms
 {
-    public partial class AuditLogsViewerForm : Form
+    public partial class AuditLogsViewerForm : ResponsiveForm
     {
         public AuditLogsViewerForm()
         {
@@ -27,30 +27,41 @@ namespace Ph_App.Forms
                 var selectedActionType = cmbActionType?.SelectedItem?.ToString() ?? string.Empty;
                 var selectedUser = cmbUser?.SelectedItem?.ToString() ?? string.Empty;
 
-                // Get all audit logs from database
-                var logs = PharmacyDBContext.AuditLogs.GetByDateRange(dateFrom, dateTo).ToList();
+                // Get all audit logs from database and filter in-memory to avoid repository date-range issues
+                var logs = PharmacyDBContext.AuditLogs.GetAll().ToList();
+
+                // Filter by date range (inclusive)
+                logs = logs.Where(l => l.ActionDateTime.Date >= dateFrom && l.ActionDateTime.Date <= dateTo).ToList();
 
                 // Filter by action type if selected
                 if (!string.IsNullOrEmpty(selectedActionType) && selectedActionType != "All")
                 {
-                    logs = logs.Where(log => log.ActionType == selectedActionType).ToList();
+                    logs = logs.Where(log => string.Equals(log.ActionType, selectedActionType, StringComparison.OrdinalIgnoreCase)).ToList();
                 }
 
                 // Filter by user if selected
                 if (!string.IsNullOrEmpty(selectedUser) && selectedUser != "All")
                 {
-                    // Get user by username
-                    var user = PharmacyDBContext.Users.GetByUsername(selectedUser);
-                    if (user != null)
+                    if (selectedUser == "System")
                     {
-                        logs = logs.Where(log => log.UserID == user.UserID).ToList();
+                        // system logs have no UserID
+                        logs = logs.Where(log => !log.UserID.HasValue).ToList();
+                    }
+                    else
+                    {
+                        var user = PharmacyDBContext.Users.GetByUsername(selectedUser);
+                        if (user != null)
+                        {
+                            logs = logs.Where(log => log.UserID == user.UserID).ToList();
+                        }
                     }
                 }
 
-                var data = logs.Select(log => new
+                // Order by the actual DateTime then project to display fields
+                var data = logs.OrderByDescending(l => l.ActionDateTime).Select(log => new
                 {
                     log.LogID,
-                    Username = GetUsername(log.UserID),
+                    Username = string.IsNullOrEmpty(log.Username) ? GetUsername(log.UserID) : log.Username,
                     log.ActionType,
                     log.TableAffected,
                     log.RecordID,
@@ -60,7 +71,7 @@ namespace Ph_App.Forms
                     ActionDate = log.ActionDateTime.ToString("yyyy-MM-dd"),
                     ActionTime = log.ActionDateTime.ToString("HH:mm:ss"),
                     Severity = GetSeverity(log.ActionType)
-                }).OrderByDescending(log => log.ActionDateTime).ToList();
+                }).ToList();
 
                 // Update form title to show counts
                 this.Text = $"Audit Logs - {data.Count()} entries from {dateFrom:yyyy-MM-dd} to {dateTo:yyyy-MM-dd}";
@@ -125,6 +136,7 @@ namespace Ph_App.Forms
                 {
                     cmbUser.Items.Clear();
                     cmbUser.Items.Add("All");
+                    cmbUser.Items.Add("System");
                     var users = PharmacyDBContext.Users.GetAll().Where(u => !u.IsDeleted).OrderBy(u => u.Username).ToList();
                     foreach (var user in users)
                     {

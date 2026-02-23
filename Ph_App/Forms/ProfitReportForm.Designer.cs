@@ -172,6 +172,7 @@ namespace Ph_App.Forms
             this.dgv.ReadOnly = true;
             this.dgv.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgv.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgv.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             // 
             // btnClose
             // 

@@ -8,7 +8,7 @@ using Ph_App.Models;
 
 namespace Ph_App.Forms
 {
-    public partial class ExpiryReportForm : Form
+    public partial class ExpiryReportForm : ResponsiveForm
     {
         public ExpiryReportForm()
         {

@@ -9,8 +9,9 @@ namespace Ph_App.Forms
 {
     /// <summary>
     /// Base form that provides a medicine data grid and common helpers used by medicine-related forms.
+    /// Now inherits from ResponsiveForm to gain resize/scale behavior.
     /// </summary>
-    public class MedicineBaseForm : Form
+    public class MedicineBaseForm : ResponsiveForm
     {
         protected DataGridView dgv;
 

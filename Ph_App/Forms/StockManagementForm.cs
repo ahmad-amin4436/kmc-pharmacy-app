@@ -6,7 +6,7 @@ using Ph_App.Models;
 
 namespace Ph_App.Forms
 {
-    public partial class StockManagementForm : Form
+    public partial class StockManagementForm : ResponsiveForm
     {
         public StockManagementForm()
         {

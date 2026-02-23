@@ -15,6 +15,8 @@ namespace Ph_App.Database
         public static SupplierRepository Suppliers { get; private set; }
         public static PurchaseRepository Purchases { get; private set; }
         public static AuditLogRepository AuditLogs { get; private set; }
+    // Currently logged-in user (set at login)
+    public static Ph_App.Models.User CurrentUser { get; set; }
 
         // Singleton pattern for database context
         private static PharmacyDBContext _instance;

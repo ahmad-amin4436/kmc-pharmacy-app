@@ -4,7 +4,11 @@ namespace Ph_App.Forms
     {
         private System.ComponentModel.IContainer components = null;
         private System.Windows.Forms.Label lblTitle;
-        private System.Windows.Forms.DataGridView dgv;
+    // use DataGridView from base class (MedicineBaseForm)
+    private System.Windows.Forms.Label lblFilter;
+    private System.Windows.Forms.TextBox txtFilter;
+    private System.Windows.Forms.Button btnFilter;
+    private System.Windows.Forms.Button btnClearFilters;
         private System.Windows.Forms.Button btnAdd;
         private System.Windows.Forms.Button btnEdit;
         private System.Windows.Forms.Button btnDelete;
@@ -24,14 +28,17 @@ namespace Ph_App.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.dgv = new System.Windows.Forms.DataGridView();
+            this.lblFilter = new System.Windows.Forms.Label();
+            this.txtFilter = new System.Windows.Forms.TextBox();
+            this.btnFilter = new System.Windows.Forms.Button();
+            this.btnClearFilters = new System.Windows.Forms.Button();
             this.btnAdd = new System.Windows.Forms.Button();
             this.btnEdit = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
             this.btnAddDemo = new System.Windows.Forms.Button();
             this.lblTitle = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.dgv)).BeginInit();
+            // dgv is inherited from MedicineBaseForm
             this.SuspendLayout();
             // 
             // lblTitle
@@ -43,13 +50,51 @@ namespace Ph_App.Forms
             this.lblTitle.Size = new System.Drawing.Size(165, 21);
             this.lblTitle.Text = "Medicine Management";
             // 
+            // lblFilter
+            // 
+            this.lblFilter.AutoSize = true;
+            this.lblFilter.Location = new System.Drawing.Point(20, 45);
+            this.lblFilter.Name = "lblFilter";
+            this.lblFilter.Size = new System.Drawing.Size(70, 13);
+            this.lblFilter.Text = "Quick Search:";
+            // 
+            // txtFilter
+            // 
+            this.txtFilter.Location = new System.Drawing.Point(100, 42);
+            this.txtFilter.Name = "txtFilter";
+            this.txtFilter.Size = new System.Drawing.Size(360, 23);
+            this.txtFilter.TextChanged += new System.EventHandler(this.TxtFilter_TextChanged);
+            // 
+            // btnFilter
+            // 
+            this.btnFilter.Location = new System.Drawing.Point(470, 42);
+            this.btnFilter.Name = "btnFilter";
+            this.btnFilter.Size = new System.Drawing.Size(75, 23);
+            this.btnFilter.Text = "Filter";
+            this.btnFilter.UseVisualStyleBackColor = true;
+            this.btnFilter.Click += new System.EventHandler(this.BtnFilter_Click);
+            // 
+            // btnClearFilters
+            // 
+            this.btnClearFilters.Location = new System.Drawing.Point(560, 42);
+            this.btnClearFilters.Name = "btnClearFilters";
+            this.btnClearFilters.Size = new System.Drawing.Size(75, 23);
+            this.btnClearFilters.Text = "Clear";
+            this.btnClearFilters.UseVisualStyleBackColor = true;
+            this.btnClearFilters.Click += new System.EventHandler(this.BtnClearFilters_Click);
+            // 
             // dgv
             // 
-            this.dgv.Location = new System.Drawing.Point(20, 45);
+            this.dgv.Location = new System.Drawing.Point(20, 80);
             this.dgv.Name = "dgv";
-            this.dgv.Size = new System.Drawing.Size(840, 375);
+            this.dgv.Size = new System.Drawing.Size(840, 340);
             this.dgv.ReadOnly = true;
             this.dgv.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgv.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            // ensure inherited dgv does not dock over the filter controls
+            this.dgv.Dock = System.Windows.Forms.DockStyle.None;
+            this.dgv.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             // 
             // btnAdd
             // 
@@ -100,6 +145,10 @@ namespace Ph_App.Forms
             // 
             this.ClientSize = new System.Drawing.Size(900, 600);
             this.Controls.Add(this.lblTitle);
+            this.Controls.Add(this.lblFilter);
+            this.Controls.Add(this.txtFilter);
+            this.Controls.Add(this.btnFilter);
+            this.Controls.Add(this.btnClearFilters);
             this.Controls.Add(this.dgv);
             this.Controls.Add(this.btnAdd);
             this.Controls.Add(this.btnEdit);
@@ -108,7 +157,7 @@ namespace Ph_App.Forms
             this.Controls.Add(this.btnClose);
             this.Name = "MedicineForm";
             this.Text = "Medicine Management";
-            ((System.ComponentModel.ISupportInitialize)(this.dgv)).EndInit();
+            // dgv EndInit handled by base form
             this.ResumeLayout(false);
         }
         #endregion

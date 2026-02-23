@@ -113,6 +113,7 @@ namespace Ph_App.Forms
             this.dgvSearch.Size = new System.Drawing.Size(480, 525);
             this.dgvSearch.ReadOnly = true;
             this.dgvSearch.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvSearch.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             // 
             // dgvCart
             // 
@@ -121,6 +122,7 @@ namespace Ph_App.Forms
             this.dgvCart.Size = new System.Drawing.Size(440, 440);
             this.dgvCart.ReadOnly = true;
             this.dgvCart.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvCart.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             // 
             // lblTotal
             // 

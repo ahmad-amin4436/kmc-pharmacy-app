@@ -4,7 +4,7 @@ using Ph_App.Models;
 
 namespace Ph_App.Forms
 {
-    public partial class MedicineEditForm : Form
+    public partial class MedicineEditForm : ResponsiveForm
     {
         public MedicineEditForm() : this(null) { }
 

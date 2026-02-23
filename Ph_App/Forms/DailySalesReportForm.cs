@@ -9,12 +9,26 @@ using Ph_App.Models;
 
 namespace Ph_App.Forms
 {
-    public partial class DailySalesReportForm : Form
+    public partial class DailySalesReportForm : ResponsiveForm
     {
         public DailySalesReportForm()
         {
             InitializeComponent();
             dtReportDate.Value = DateTime.Today;
+            // load logo if present
+            try
+            {
+                var logoPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory ?? ".", "black logo correct address.jpg.jpeg");
+                var img = Ph_App.Utils.LogoHelper.LoadLogoWithTransparentBackground(logoPath);
+                if (img != null && this.Controls.Contains(pbLogo))
+                {
+                    pbLogo.Image = img;
+                    pbLogo.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+                    pbLogo.BackColor = System.Drawing.Color.Transparent;
+                }
+            }
+            catch { }
+
             LoadSalesReport();
         }
 
@@ -134,6 +148,20 @@ namespace Ph_App.Forms
             html.AppendLine("<body>");
             
             html.AppendLine("<div class='header'>");
+            // include embedded logo if present
+            try
+            {
+                var logoPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory ?? ".", "black logo correct address.jpg.jpeg");
+                if (System.IO.File.Exists(logoPath))
+                {
+                    var bytes = System.IO.File.ReadAllBytes(logoPath);
+                    var base64 = Convert.ToBase64String(bytes);
+                    var ext = System.IO.Path.GetExtension(logoPath).TrimStart('.').ToLower();
+                    var mime = ext == "png" ? "image/png" : "image/jpeg";
+                    html.AppendLine($"<img src=\"data:{mime};base64,{base64}\" style=\"max-height:80px;\" />");
+                }
+            }
+            catch { }
             html.AppendLine("<h1>PHARMACY INVOICE</h1>");
             html.AppendLine("</div>");
             

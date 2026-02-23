@@ -152,6 +152,7 @@ namespace Ph_App.Forms
             this.dgv.ReadOnly = true;
             this.dgv.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgv.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgv.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.Load += new System.EventHandler(this.AuditLogsViewerForm_Load);
             // 
             // btnClose

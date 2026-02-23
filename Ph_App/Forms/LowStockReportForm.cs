@@ -7,7 +7,7 @@ using Ph_App.Models;
 
 namespace Ph_App.Forms
 {
-    public partial class LowStockReportForm : Form
+    public partial class LowStockReportForm : ResponsiveForm
     {
         public LowStockReportForm()
         {

@@ -39,6 +39,7 @@ namespace Ph_App.Utils
                 };
                 
                 _openForms[formType] = newForm;
+                try { Ph_App.Database.PharmacyDBContext.AuditLogs.LogUserAction(Ph_App.Database.PharmacyDBContext.CurrentUser?.UserID, "OPEN", "Forms", formType.Name, "", $"User opened {formType.Name}"); } catch { }
                 newForm.Show();
                 return newForm;
             }
@@ -103,6 +104,7 @@ namespace Ph_App.Utils
         {
             using (var form = new T())
             {
+                try { Ph_App.Database.PharmacyDBContext.AuditLogs.LogUserAction(Ph_App.Database.PharmacyDBContext.CurrentUser?.UserID, "OPEN", "Forms", typeof(T).Name, "", $"User opened {typeof(T).Name}"); } catch { }
                 form.ShowDialog();
             }
         }

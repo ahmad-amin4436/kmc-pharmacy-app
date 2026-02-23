@@ -151,7 +151,7 @@ namespace Ph_App.DAL
                     PurchasePricePerPack = @PurchasePricePerPack, PurchasePricePerStrip = @PurchasePricePerStrip, PurchasePricePerTablet = @PurchasePricePerTablet,
                     SalePricePerPack = @SalePricePerPack, SalePricePerStrip = @SalePricePerStrip, SalePricePerTablet = @SalePricePerTablet,
                     CurrentStockPacks = @CurrentStockPacks, CurrentStockStrips = @CurrentStockStrips, CurrentStockTablets = @CurrentStockTablets,
-                    MinimumStockLevel = @MinimumStockLevel, SupplierID = @SupplierID, ModifiedDate = @ModifiedDate
+                    MinimumStockLevel = @MinimumStockLevel, SupplierID = @SupplierID, IsDeleted = @IsDeleted, ModifiedDate = @ModifiedDate
                 WHERE MedicineID = @MedicineID";
             
             var parameters = new Dictionary<string, object>
@@ -175,6 +175,7 @@ namespace Ph_App.DAL
                 { "@CurrentStockTablets", entity.CurrentStockTablets },
                 { "@MinimumStockLevel", entity.MinimumStockLevel },
                 { "@SupplierID", entity.SupplierID },
+                { "@IsDeleted", entity.IsDeleted },
                 { "@ModifiedDate", DateTime.Now },
                 { "@MedicineID", entity.MedicineID }
             };
@@ -285,7 +286,7 @@ namespace Ph_App.DAL
                     PurchasePricePerPack = @PurchasePricePerPack, PurchasePricePerStrip = @PurchasePricePerStrip, PurchasePricePerTablet = @PurchasePricePerTablet,
                     SalePricePerPack = @SalePricePerPack, SalePricePerStrip = @SalePricePerStrip, SalePricePerTablet = @SalePricePerTablet,
                     CurrentStockPacks = @CurrentStockPacks, CurrentStockStrips = @CurrentStockStrips, CurrentStockTablets = @CurrentStockTablets,
-                    MinimumStockLevel = @MinimumStockLevel, SupplierID = @SupplierID, ModifiedDate = @ModifiedDate
+                    MinimumStockLevel = @MinimumStockLevel, SupplierID = @SupplierID, IsDeleted = @IsDeleted, ModifiedDate = @ModifiedDate
                 WHERE MedicineID = @MedicineID", connection);
             
             // Add all parameters
@@ -308,6 +309,7 @@ namespace Ph_App.DAL
             command.Parameters.AddWithValue("@CurrentStockTablets", entity.CurrentStockTablets);
             command.Parameters.AddWithValue("@MinimumStockLevel", entity.MinimumStockLevel);
             command.Parameters.AddWithValue("@SupplierID", entity.SupplierID);
+            command.Parameters.AddWithValue("@IsDeleted", entity.IsDeleted);
             command.Parameters.AddWithValue("@ModifiedDate", DateTime.Now);
             command.Parameters.AddWithValue("@MedicineID", entity.MedicineID);
             

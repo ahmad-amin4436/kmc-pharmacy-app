@@ -8,7 +8,7 @@ using Ph_App.DAL;
 
 namespace Ph_App.Forms
 {
-    public partial class UserManagementForm : Form
+    public partial class UserManagementForm : ResponsiveForm
     {
         public UserManagementForm()
         {
@@ -19,7 +19,7 @@ namespace Ph_App.Forms
             LoadUsers();
             
             // Log form access
-            PharmacyDBContext.AuditLogs.LogUserAction(null, "VIEW", "Forms", "UserManagementForm", "", "User accessed User Management");
+            PharmacyDBContext.AuditLogs.LogUserAction(PharmacyDBContext.CurrentUser?.UserID, "VIEW", "Forms", "UserManagementForm", "", "User accessed User Management");
         }
 
         private void LoadUsers()
@@ -102,7 +102,7 @@ namespace Ph_App.Forms
         private void BtnAdd_Click(object sender, EventArgs e)
         {
             // Log button click
-            PharmacyDBContext.AuditLogs.LogUserAction(null, "CLICK", "Forms", "UserManagementForm.btnAdd", "", "User clicked Add User button");
+            PharmacyDBContext.AuditLogs.LogUserAction(PharmacyDBContext.CurrentUser?.UserID, "CLICK", "Forms", "UserManagementForm.btnAdd", "", "User clicked Add User button");
             
             using (var f = new AddUserForm())
             {
@@ -128,7 +128,7 @@ namespace Ph_App.Forms
         private void BtnEdit_Click(object sender, EventArgs e)
         {
             // Log button click
-            PharmacyDBContext.AuditLogs.LogUserAction(null, "CLICK", "Forms", "UserManagementForm.btnEdit", "", "User clicked Edit User button");
+            PharmacyDBContext.AuditLogs.LogUserAction(PharmacyDBContext.CurrentUser?.UserID, "CLICK", "Forms", "UserManagementForm.btnEdit", "", "User clicked Edit User button");
             
             var sel = GetSelectedUser();
             if (sel == null) 

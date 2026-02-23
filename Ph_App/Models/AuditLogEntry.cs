@@ -6,6 +6,7 @@ namespace Ph_App.Models
  {
  public int LogID { get; set; }
  public int? UserID { get; set; }
+ public string Username { get; set; }
  public string ActionType { get; set; }
  public string TableAffected { get; set; }
  public string RecordID { get; set; }

@@ -11,6 +11,7 @@ namespace Ph_App.Forms
         private System.Windows.Forms.DataGridView dgv;
         private System.Windows.Forms.Button btnClose;
         private System.Windows.Forms.DataGridViewButtonColumn btnPrintColumn;
+    private System.Windows.Forms.PictureBox pbLogo;
 
         protected override void Dispose(bool disposing)
         {
@@ -26,6 +27,7 @@ namespace Ph_App.Forms
         {
             this.components = new System.ComponentModel.Container();
             this.lblTitle = new System.Windows.Forms.Label();
+            this.pbLogo = new System.Windows.Forms.PictureBox();
             this.lblDate = new System.Windows.Forms.Label();
             this.dtReportDate = new System.Windows.Forms.DateTimePicker();
             this.btnRefresh = new System.Windows.Forms.Button();
@@ -44,6 +46,13 @@ namespace Ph_App.Forms
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Size = new System.Drawing.Size(155, 21);
             this.lblTitle.Text = "Daily Sales Report";
+            // 
+            // pbLogo
+            // 
+            this.pbLogo.Location = new System.Drawing.Point(780, 10);
+            this.pbLogo.Name = "pbLogo";
+            this.pbLogo.Size = new System.Drawing.Size(100, 60);
+            this.pbLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             // 
             // lblDate
             // 
@@ -87,6 +96,7 @@ namespace Ph_App.Forms
             this.dgv.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgv.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgv.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgv_CellClick);
+            this.dgv.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             // 
             // btnPrintColumn
             // 
@@ -106,6 +116,7 @@ namespace Ph_App.Forms
             // DailySalesReportForm
             // 
             this.ClientSize = new System.Drawing.Size(900, 600);
+            this.Controls.Add(this.pbLogo);
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.lblDate);
             this.Controls.Add(this.dtReportDate);

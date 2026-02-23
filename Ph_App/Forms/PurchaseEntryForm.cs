@@ -6,7 +6,7 @@ using Ph_App.Models;
 
 namespace Ph_App.Forms
 {
-    public partial class PurchaseEntryForm : Form
+    public partial class PurchaseEntryForm : ResponsiveForm
     {
         public PurchaseEntryForm()
         {

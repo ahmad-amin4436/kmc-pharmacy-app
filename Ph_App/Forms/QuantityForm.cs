@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace Ph_App.Forms
 {
-    public partial class QuantityForm : Form
+    public partial class QuantityForm : ResponsiveForm
     {
         public int Packs { get; private set; }
         public int Strips { get; private set; }

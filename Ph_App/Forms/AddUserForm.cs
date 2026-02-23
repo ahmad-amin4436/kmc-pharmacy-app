@@ -5,7 +5,7 @@ using Ph_App.BLL;
 
 namespace Ph_App.Forms
 {
-    public partial class AddUserForm : Form
+    public partial class AddUserForm : ResponsiveForm
     {
         public User Result { get; private set; }
         private User editing;

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Windows.Forms;
 using Ph_App.Models;
 using Ph_App.Database;
@@ -12,9 +13,72 @@ namespace Ph_App.Forms
         {
             InitializeComponent();
             LoadMedicinesGrid();
-            
+
             // Log form access
-            PharmacyDBContext.AuditLogs.LogUserAction(null, "VIEW", "Forms", "MedicineForm", "", "User accessed Medicine Management");
+            PharmacyDBContext.AuditLogs.LogUserAction(PharmacyDBContext.CurrentUser?.UserID, "VIEW", "Forms", "MedicineForm", "", "User accessed Medicine Management");
+        }
+
+        private void BtnFilter_Click(object sender, EventArgs e)
+        {
+            try { PharmacyDBContext.AuditLogs.LogUserAction(PharmacyDBContext.CurrentUser?.UserID, "CLICK", "Forms", "MedicineForm.btnFilter", "", "User clicked Filter in MedicineForm"); } catch { }
+            ApplyQuickFilter();
+        }
+
+        private void BtnClearFilters_Click(object sender, EventArgs e)
+        {
+            try { PharmacyDBContext.AuditLogs.LogUserAction(PharmacyDBContext.CurrentUser?.UserID, "CLICK", "Forms", "MedicineForm.btnClearFilters", "", "User clicked Clear filter in MedicineForm"); } catch { }
+            // clear textbox if present
+            var tb = this.Controls.Find("txtFilter", true);
+            if (tb != null && tb.Length > 0 && tb[0] is TextBox t)
+            {
+                t.Text = string.Empty;
+            }
+            ApplyQuickFilter();
+        }
+
+        private void TxtFilter_TextChanged(object sender, EventArgs e)
+        {
+            ApplyQuickFilter();
+        }
+
+        private void ApplyQuickFilter()
+        {
+            // find txtFilter control if present
+            var txts = this.Controls.Find("txtFilter", true);
+            var filter = string.Empty;
+            if (txts != null && txts.Length > 0 && txts[0] is TextBox tx)
+            {
+                filter = (tx.Text ?? string.Empty).Trim().ToLowerInvariant();
+            }
+
+            // get all medicines and apply quick search across several fields
+            var list = PharmacyDBContext.Medicines.GetAll().Where(m => !m.IsDeleted).ToList();
+            if (!string.IsNullOrEmpty(filter))
+            {
+                list = list.Where(m => ((m.MedicineName ?? string.Empty).ToLowerInvariant().Contains(filter)
+                    || (m.GenericName ?? string.Empty).ToLowerInvariant().Contains(filter)
+                    || (m.Company ?? string.Empty).ToLowerInvariant().Contains(filter)
+                    || (m.BatchNo ?? string.Empty).ToLowerInvariant().Contains(filter))).ToList();
+            }
+
+            dgv.DataSource = null;
+            dgv.DataSource = list.Select(m => new
+            {
+                m.MedicineID,
+                m.MedicineName,
+                m.GenericName,
+                m.Company,
+                m.BatchNo,
+                Expiry = m.ExpiryDate?.ToString("yyyy-MM-dd"),
+                m.PackQuantity,
+                m.StripQuantity,
+                m.TabletQuantity,
+                m.CurrentStockPacks,
+                m.CurrentStockStrips,
+                m.CurrentStockTablets,
+                m.MinimumStockLevel,
+                Created = m.CreatedDate.ToString("yyyy-MM-dd")
+            }).ToList();
         }
 
         private void BtnAddDemo_Click(object sender, EventArgs e)
@@ -26,7 +90,7 @@ namespace Ph_App.Forms
                     var m = form.Result;
                     m.CreatedDate = DateTime.Now;
                     var addedMedicine = PharmacyDBContext.Medicines.Add(m);
-                    PharmacyDBContext.AuditLogs.LogUserAction(null, "CREATE", "Medicines", addedMedicine.MedicineID.ToString(), "", $"Medicine: {addedMedicine.MedicineName}");
+                    PharmacyDBContext.AuditLogs.LogUserAction(PharmacyDBContext.CurrentUser?.UserID, "CREATE", "Medicines", addedMedicine.MedicineID.ToString(), "", $"Medicine: {addedMedicine.MedicineName}");
                     LoadMedicinesGrid();
                 }
             }
@@ -35,8 +99,8 @@ namespace Ph_App.Forms
         private void BtnAdd_Click(object sender, EventArgs e)
         {
             // Log button click
-            PharmacyDBContext.AuditLogs.LogUserAction(null, "CLICK", "Forms", "MedicineForm.btnAdd", "", "User clicked Add Medicine button");
-            
+            PharmacyDBContext.AuditLogs.LogUserAction(PharmacyDBContext.CurrentUser?.UserID, "CLICK", "Forms", "MedicineForm.btnAdd", "", "User clicked Add Medicine button");
+
             using (var form = new MedicineEditForm())
             {
                 if (form.ShowDialog(this) == DialogResult.OK)
@@ -44,7 +108,7 @@ namespace Ph_App.Forms
                     var m = form.Result;
                     m.CreatedDate = DateTime.Now;
                     var addedMedicine = PharmacyDBContext.Medicines.Add(m);
-                    PharmacyDBContext.AuditLogs.LogUserAction(null, "CREATE", "Medicines", addedMedicine.MedicineID.ToString(), "", $"Medicine: {addedMedicine.MedicineName}");
+                    PharmacyDBContext.AuditLogs.LogUserAction(PharmacyDBContext.CurrentUser?.UserID, "CREATE", "Medicines", addedMedicine.MedicineID.ToString(), "", $"Medicine: {addedMedicine.MedicineName}");
                     LoadMedicinesGrid();
                 }
             }
@@ -53,8 +117,8 @@ namespace Ph_App.Forms
         private void BtnEdit_Click(object sender, EventArgs e)
         {
             // Log button click
-            PharmacyDBContext.AuditLogs.LogUserAction(null, "CLICK", "Forms", "MedicineForm.btnEdit", "", "User clicked Edit Medicine button");
-            
+            PharmacyDBContext.AuditLogs.LogUserAction(PharmacyDBContext.CurrentUser?.UserID, "CLICK", "Forms", "MedicineForm.btnEdit", "", "User clicked Edit Medicine button");
+
             var sel = GetSelectedMedicine();
             if (sel == null)
             {
@@ -90,7 +154,7 @@ namespace Ph_App.Forms
                     sel.SupplierID = updated.SupplierID;
                     sel.ModifiedDate = DateTime.Now;
                     PharmacyDBContext.Medicines.Update(sel);
-                    PharmacyDBContext.AuditLogs.LogUserAction(null, "UPDATE", "Medicines", sel.MedicineID.ToString(), oldValue, newValue);
+                    PharmacyDBContext.AuditLogs.LogUserAction(PharmacyDBContext.CurrentUser?.UserID, "UPDATE", "Medicines", sel.MedicineID.ToString(), oldValue, newValue);
                     LoadMedicinesGrid();
                 }
             }
@@ -108,8 +172,8 @@ namespace Ph_App.Forms
             if (ok == DialogResult.Yes)
             {
                 // Log button click and delete action
-                PharmacyDBContext.AuditLogs.LogUserAction(null, "CLICK", "Forms", "MedicineForm.btnDelete", "", "User clicked Delete Medicine button");
-                PharmacyDBContext.AuditLogs.LogUserAction(null, "DELETE", "Medicines", sel.MedicineID.ToString(), $"Medicine: {sel.MedicineName}", "");
+                PharmacyDBContext.AuditLogs.LogUserAction(PharmacyDBContext.CurrentUser?.UserID, "CLICK", "Forms", "MedicineForm.btnDelete", "", "User clicked Delete Medicine button");
+                PharmacyDBContext.AuditLogs.LogUserAction(PharmacyDBContext.CurrentUser?.UserID, "DELETE", "Medicines", sel.MedicineID.ToString(), $"Medicine: {sel.MedicineName}", "");
                 sel.IsDeleted = true;
                 sel.ModifiedDate = DateTime.Now;
                 PharmacyDBContext.Medicines.Update(sel);

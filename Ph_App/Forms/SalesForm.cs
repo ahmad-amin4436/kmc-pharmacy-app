@@ -9,7 +9,7 @@ using Ph_App.Utils;
 
 namespace Ph_App.Forms
 {
-    public partial class SalesForm : Form
+    public partial class SalesForm : ResponsiveForm
     {
         public SalesForm()
         {
@@ -18,7 +18,7 @@ namespace Ph_App.Forms
             txtSearch.TextChanged += TxtSearch_TextChanged;
             
             // Log form access
-            PharmacyDBContext.AuditLogs.LogUserAction(null, "VIEW", "Forms", "SalesForm", "", "User accessed Sales/POS form");
+            PharmacyDBContext.AuditLogs.LogUserAction(PharmacyDBContext.CurrentUser?.UserID, "VIEW", "Forms", "SalesForm", "", "User accessed Sales/POS form");
         }
 
         private List<SaleLine> Cart = new List<SaleLine>();
@@ -85,6 +85,7 @@ namespace Ph_App.Forms
                 var line = new SaleLine { MedicineID = med.MedicineID, Name = med.MedicineName, Packs = packs, Strips = strips, Tablets = tablets, UnitPricePack = unitPack, UnitPriceStrip = unitStrip, UnitPriceTablet = unitTablet, Total = total };
                 Cart.Add(line);
                 RefreshCart();
+                try { PharmacyDBContext.AuditLogs.LogUserAction(PharmacyDBContext.CurrentUser?.UserID, "CREATE", "Cart", line.MedicineID.ToString(), "", $"Added to cart: {line.Name} Packs:{line.Packs} Strips:{line.Strips} Tablets:{line.Tablets}"); } catch { }
             }
         }
 
@@ -106,6 +107,7 @@ namespace Ph_App.Forms
                     line.Tablets = qf.Tablets;
                     line.Total = qf.Packs * med.SalePricePerPack + qf.Strips * med.SalePricePerStrip + qf.Tablets * med.SalePricePerTablet;
                     RefreshCart();
+                    try { PharmacyDBContext.AuditLogs.LogUserAction(PharmacyDBContext.CurrentUser?.UserID, "UPDATE", "Cart", line.MedicineID.ToString(), "", $"Updated cart line: {line.Name} Packs:{line.Packs} Strips:{line.Strips} Tablets:{line.Tablets}"); } catch { }
                 }
             }
         }
@@ -113,7 +115,7 @@ namespace Ph_App.Forms
         private void BtnCheckout_Click(object sender, EventArgs e)
         {
             // Log button click
-            PharmacyDBContext.AuditLogs.LogUserAction(null, "CLICK", "Forms", "SalesForm.btnCheckout", "", "User clicked Complete Sale button");
+            PharmacyDBContext.AuditLogs.LogUserAction(PharmacyDBContext.CurrentUser?.UserID, "CLICK", "Forms", "SalesForm.btnCheckout", "", "User clicked Complete Sale button");
             
             if (!Cart.Any()) { MessageBox.Show("Cart is empty."); return; }
             var sale = new Sale { 
@@ -125,7 +127,7 @@ namespace Ph_App.Forms
                 InvoiceNo = "S" + DateTime.Now.ToString("yyyyMMddHHmmss"), 
                 Notes = "",
                 CustomerID = null,
-                UserID = 1,
+                UserID = PharmacyDBContext.CurrentUser?.UserID ?? 0,
                 CreatedDate = DateTime.Now
             };
             
@@ -162,14 +164,28 @@ namespace Ph_App.Forms
 
         private void BtnEditItem_Click(object sender, EventArgs e)
         {
-            // Placeholder method - can be implemented later if needed
-            MessageBox.Show("Edit item functionality not yet implemented.");
+            // Edit selected cart item quantities (reuse existing quantity flow)
+            if (dgvCart.SelectedRows.Count == 0) { MessageBox.Show("Select a cart item first."); return; }
+            // Reuse the existing logic that opens QuantityForm and updates the cart line
+            BtnRemoveFromCart_Click(sender, e);
         }
 
         private void BtnRemoveItem_Click(object sender, EventArgs e)
         {
-            // Placeholder method - can be implemented later if needed
-            MessageBox.Show("Remove item functionality not yet implemented.");
+            // Remove the selected cart item from the cart
+            if (dgvCart.SelectedRows.Count == 0) { MessageBox.Show("Select a cart item first."); return; }
+            var medId = Convert.ToInt32(dgvCart.SelectedRows[0].Cells["MedicineID"].Value);
+            var packs = Convert.ToInt32(dgvCart.SelectedRows[0].Cells["Packs"].Value);
+            var strips = Convert.ToInt32(dgvCart.SelectedRows[0].Cells["Strips"].Value);
+            var tablets = Convert.ToInt32(dgvCart.SelectedRows[0].Cells["Tablets"].Value);
+            var line = Cart.FirstOrDefault(c => c.MedicineID == medId && c.Packs == packs && c.Strips == strips && c.Tablets == tablets);
+            if (line == null) { MessageBox.Show("Selected cart item not found."); return; }
+            var dlg = MessageBox.Show($"Remove {line.Name} from cart?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (dlg == DialogResult.Yes)
+            {
+                Cart.Remove(line);
+                RefreshCart();
+            }
         }
 
         private class SaleLine
