@@ -18,13 +18,16 @@ namespace Ph_App.Forms
             // load logo if present
             try
             {
-                var logoPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory ?? ".", "black logo correct address.jpg.jpeg");
+                var logoPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory ?? ".", "black logo correct address.jpeg");
                 var img = Ph_App.Utils.LogoHelper.LoadLogoWithTransparentBackground(logoPath);
                 if (img != null && this.Controls.Contains(pbLogo))
                 {
-                    pbLogo.Image = img;
+                    // Use high-quality scaled image for PictureBox
+                    var scaledImg = Ph_App.Utils.LogoHelper.LoadLogoForPictureBox(logoPath, pbLogo.Size);
+                    pbLogo.Image = scaledImg ?? img;
                     pbLogo.Anchor = AnchorStyles.Top | AnchorStyles.Right;
                     pbLogo.BackColor = System.Drawing.Color.Transparent;
+                    pbLogo.SizeMode = PictureBoxSizeMode.Zoom;
                 }
             }
             catch { }
@@ -151,13 +154,13 @@ namespace Ph_App.Forms
             // include embedded logo if present
             try
             {
-                var logoPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory ?? ".", "black logo correct address.jpg.jpeg");
+                var logoPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory ?? ".", "black logo correct address.jpeg");
                 if (System.IO.File.Exists(logoPath))
                 {
                     var bytes = System.IO.File.ReadAllBytes(logoPath);
                     var base64 = Convert.ToBase64String(bytes);
                     var ext = System.IO.Path.GetExtension(logoPath).TrimStart('.').ToLower();
-                    var mime = ext == "png" ? "image/png" : "image/jpeg";
+                    var mime = ext == "jpeg" ? "image/jpeg" : "image/x-icon";
                     html.AppendLine($"<img src=\"data:{mime};base64,{base64}\" style=\"max-height:80px;\" />");
                 }
             }

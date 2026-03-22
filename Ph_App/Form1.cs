@@ -18,15 +18,18 @@ namespace Ph_App
             // load cleaned transparent logo into picture box (designer places pbLogo)
             try
             {
-                var logoPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory ?? ".", "black logo correct address.jpg.jpeg");
+                var logoPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory ?? ".", "black logo correct address.jpeg");
                 var img = Ph_App.Utils.LogoHelper.LoadLogoWithTransparentBackground(logoPath);
                 if (img != null)
                 {
                     var objs = this.Controls.Find("pbLogo", true);
                     if (objs != null && objs.Length > 0 && objs[0] is PictureBox pb)
                     {
-                        pb.Image = img;
+                        // Use high-quality scaled image for PictureBox
+                        var scaledImg = Ph_App.Utils.LogoHelper.LoadLogoForPictureBox(logoPath, pb.Size);
+                        pb.Image = scaledImg ?? img;
                         pb.BackColor = System.Drawing.Color.Transparent;
+                        pb.SizeMode = PictureBoxSizeMode.Zoom;
                     }
                 }
             }

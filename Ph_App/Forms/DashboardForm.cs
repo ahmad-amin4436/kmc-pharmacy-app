@@ -14,13 +14,16 @@ namespace Ph_App.Forms
             // Load logo into picture box if present
             try
             {
-                var logoPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory ?? ".", "black logo correct address.jpg.jpeg");
+                var logoPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory ?? ".", "black logo correct address.jpeg");
                 var img = Ph_App.Utils.LogoHelper.LoadLogoWithTransparentBackground(logoPath);
                 if (img != null && this.Controls.Contains(pbLogo))
                 {
-                    pbLogo.Image = img;
+                    // Use high-quality scaled image for PictureBox
+                    var scaledImg = Ph_App.Utils.LogoHelper.LoadLogoForPictureBox(logoPath, pbLogo.Size);
+                    pbLogo.Image = scaledImg ?? img;
                     pbLogo.Anchor = AnchorStyles.Top | AnchorStyles.Right;
                     pbLogo.BackColor = System.Drawing.Color.Transparent;
+                    pbLogo.SizeMode = PictureBoxSizeMode.Zoom;
                 }
             }
             catch { }
