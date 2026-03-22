@@ -185,19 +185,26 @@ namespace Ph_App.Forms
                 html.AppendLine($"<td>{detail.QuantityPacks}</td>");
                 html.AppendLine($"<td>{detail.QuantityStrips}</td>");
                 html.AppendLine($"<td>{detail.QuantityTablets}</td>");
-                html.AppendLine($"<td>{detail.SalePrice:C}</td>");
-                html.AppendLine($"<td>{detail.Total:C}</td>");
+                // html.AppendLine($"<td>{detail.SalePrice:C}</td>"); // System currency format commented
+                html.AppendLine($"<td>Rs {detail.SalePrice:F2}</td>"); // PKR format
+                // html.AppendLine($"<td>{detail.Total:C}</td>"); // System currency format commented
+                html.AppendLine($"<td>Rs {detail.Total:F2}</td>"); // PKR format
                 html.AppendLine("</tr>");
             }
             
             html.AppendLine("</table>");
             
             html.AppendLine("<div class='total'>");
-            html.AppendLine($"<p><strong>Subtotal:</strong> {sale.TotalAmount:C}</p>");
-            html.AppendLine($"<p><strong>Discount:</strong> {sale.Discount:C}</p>");
-            html.AppendLine($"<p><strong>Net Amount:</strong> {sale.NetAmount:C}</p>");
-            html.AppendLine($"<p><strong>Paid Amount:</strong> {sale.PaidAmount:C}</p>");
-            html.AppendLine($"<p><strong>Change:</strong> {sale.ChangeAmount:C}</p>");
+            // html.AppendLine($"<p><strong>Subtotal:</strong> {sale.TotalAmount:C}</p>"); // System currency format commented
+            html.AppendLine($"<p><strong>Subtotal:</strong> Rs {sale.TotalAmount:F2}</p>"); // PKR format
+            // html.AppendLine($"<p><strong>Discount:</strong> {sale.Discount:C}</p>"); // System currency format commented
+            html.AppendLine($"<p><strong>Discount:</strong> Rs {sale.Discount:F2}</p>"); // PKR format
+            // html.AppendLine($"<p><strong>Net Amount:</strong> {sale.NetAmount:C}</p>"); // System currency format commented
+            html.AppendLine($"<p><strong>Net Amount:</strong> Rs {sale.NetAmount:F2}</p>"); // PKR format
+            // html.AppendLine($"<p><strong>Paid Amount:</strong> {sale.PaidAmount:C}</p>"); // System currency format commented
+            html.AppendLine($"<p><strong>Paid Amount:</strong> Rs {sale.PaidAmount:F2}</p>"); // PKR format
+            // html.AppendLine($"<p><strong>Change:</strong> {sale.ChangeAmount:C}</p>"); // System currency format commented
+            html.AppendLine($"<p><strong>Change:</strong> Rs {sale.ChangeAmount:F2}</p>"); // PKR format
             html.AppendLine("</div>");
             
             html.AppendLine("</body>");
