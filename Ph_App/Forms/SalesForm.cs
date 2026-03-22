@@ -40,7 +40,8 @@ namespace Ph_App.Forms
         {
             dgvCart.DataSource = null;
             dgvCart.DataSource = Cart.Select(c => new { c.MedicineID, c.Name, c.Packs, c.Strips, c.Tablets, c.UnitPricePack, c.UnitPriceStrip, c.UnitPriceTablet, c.Total }).ToList();
-            lblTotal.Text = "Total: " + Cart.Sum(x => x.Total).ToString("C2");
+            //lblTotal.Text = "Total: " + Cart.Sum(x => x.Total).ToString("C2");
+            lblTotal.Text = "Total: Rs " + Cart.Sum(x => x.Total).ToString("N2");
         }
 
         private int GetReservedPacksInCart(int medicineId, SaleLine exclude = null)
