@@ -18,7 +18,7 @@ namespace Ph_App
             // load cleaned transparent logo into picture box (designer places pbLogo)
             try
             {
-                var logoPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory ?? ".", "black logo correct address.jpeg");
+var logoPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory ?? ".", "amc-logo-removebg-preview.png");
                 var img = Ph_App.Utils.LogoHelper.LoadLogoWithTransparentBackground(logoPath);
                 if (img != null)
                 {

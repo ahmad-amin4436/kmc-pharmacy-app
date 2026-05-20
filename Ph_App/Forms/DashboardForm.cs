@@ -14,7 +14,7 @@ namespace Ph_App.Forms
             // Load logo into picture box if present
             try
             {
-                var logoPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory ?? ".", "black logo correct address.jpeg");
+                var logoPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory ?? ".", "amc-logo-removebg-preview.png");
                 var img = Ph_App.Utils.LogoHelper.LoadLogoWithTransparentBackground(logoPath);
                 if (img != null && this.Controls.Contains(pbLogo))
                 {

@@ -1,4 +1,4 @@
-﻿namespace Ph_App
+namespace Ph_App
 {
     partial class Form1
     {
@@ -88,7 +88,7 @@
             // 
             // pbLogo
             // 
-            this.pbLogo.Image = global::Ph_App.Properties.Resources.black_logo_correct_address;
+            this.pbLogo.Image = global::Ph_App.Properties.Resources.amc_logo_removebg_preview;
             this.pbLogo.Location = new System.Drawing.Point(12, 12);
             this.pbLogo.Name = "pbLogo";
             this.pbLogo.Size = new System.Drawing.Size(120, 120);

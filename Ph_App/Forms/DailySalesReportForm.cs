@@ -18,7 +18,7 @@ namespace Ph_App.Forms
             // load logo if present
             try
             {
-                var logoPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory ?? ".", "black logo correct address.jpeg");
+                var logoPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory ?? ".", "amc-logo-removebg-preview.png");
                 var img = Ph_App.Utils.LogoHelper.LoadLogoWithTransparentBackground(logoPath);
                 if (img != null && this.Controls.Contains(pbLogo))
                 {
@@ -154,13 +154,13 @@ namespace Ph_App.Forms
             // include embedded logo if present
             try
             {
-                var logoPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory ?? ".", "black logo correct address.jpeg");
+                var logoPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory ?? ".", "amc-logo-removebg-preview.png");
                 if (System.IO.File.Exists(logoPath))
                 {
                     var bytes = System.IO.File.ReadAllBytes(logoPath);
                     var base64 = Convert.ToBase64String(bytes);
                     var ext = System.IO.Path.GetExtension(logoPath).TrimStart('.').ToLower();
-                    var mime = ext == "jpeg" ? "image/jpeg" : "image/x-icon";
+                    var mime = ext == "png" ? "image/png" : "image/x-icon";
                     html.AppendLine($"<img src=\"data:{mime};base64,{base64}\" style=\"max-height:80px;\" />");
                 }
             }
